@@ -13,7 +13,7 @@ from kidney import kidney_pred
 def main():
 
 	menu = ["Home", "Diabetes Prediction", "Heart Disease Prediction", "Chronic Kidney Disease Prediction", "Stroke Prediction",
-	"Cancer Prediction", "About"]
+	"Cancer Prediction"]
 
 	choice = st.sidebar.selectbox("Menu", menu)
 
@@ -33,7 +33,7 @@ There are a total of 5 diseases that can be predicted with the help of this appl
 
 ### App Content
 
-	- This app has 7 sections
+	- This app has 6 sections
 
 	1) Home Page - The page you are currently in
 
@@ -51,8 +51,6 @@ There are a total of 5 diseases that can be predicted with the help of this appl
 
 	6) Cancer Prediction - This page will help you to predict whether you have Cancer 
 	or not
-
-	7) About - About the Creators
 
 			""")
 
