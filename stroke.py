@@ -3,27 +3,39 @@ import joblib
 import numpy as np
 from PIL import Image
 
-# Define the encoded values for mapping
+# Predefined attribute information and encoding dictionary
+attribute = """
+## Attribute Information
+1) id: unique identifier
+2) gender: "Male", "Female" or "Other"
+3) age: age of the patient
+4) hypertension: 0 if the patient doesn't have hypertension, 1 if the patient has hypertension
+5) heart_disease: 0 if the patient doesn't have any heart diseases, 1 if the patient has a heart disease
+6) ever_married: "No" or "Yes"
+7) work_type: "children", "Govt job", "Never worked", "Private" or "Self-employed"
+8) Residence_type: "Rural" or "Urban"
+9) avg_glucose_level: average glucose level in blood
+10) bmi: body mass index
+11) smoking_status: "formerly smoked", "never smoked", "smokes" or "Unknown"
+12) stroke: 1 if the patient had a stroke or 0 if not
+"""
+
 encoded_values = {
-    "Female": 0, "Male": 1, "Yes": 1, "No": 0, "Urban": 1, "Rural": 0,
-    'Private': 1, 'Self-employed': 3, 'Govt job': 0, 'Children': 4, 'Never worked': 1,
-    'Formerly smoked': 1, 'Never smoked': 2, 'Smokes': 3, 'Unknown': 0
+    "Female": 0, "Male": 1, "Yes": 1, "No": 0, "Urban": 1, "Rural": 0, 'Private': 1,
+    'Self-employed': 3, 'Govt job': 0, 'Children': 4, 'Never worked': 1, 'Formerly smoked': 1,
+    'Never smoked': 2, 'Smokes': 3, 'Unknown': 0
 }
 
-# Function for encoding categorical values based on the dictionary
-def a(val, my_dict):
-    return my_dict.get(val, val)  # Get value from dict or return the original value if not found
+# Function for encoding
+def encode(val, encoding_dict):
+    return encoding_dict.get(val, val)
 
-# Main prediction function
 def stroke_pred():
     st.write("# Stroke Predictor")
     img = Image.open("stroke.jpeg")
-    st.image(img)
-    st.write("""
-    Stroke is a serious medical condition that can lead to long-term disability or death. Early prediction of stroke can help in effective prevention and management of the disease.
-    """)
-    
-    # User input
+    st.image(img) 
+    st.write(attribute)
+
     st.header("Give Your Input")
     col1, col2 = st.columns(2)
 
@@ -41,40 +53,38 @@ def stroke_pred():
         avg_glucose_level = st.number_input("Enter your Avg glucose level", 55.0, 300.0, 106.0, step=0.1)
         smoking_status = st.selectbox("Select your Smoking Status", ['Formerly smoked', 'Never smoked', 'Smokes', 'Unknown'])
 
-    # Display selected inputs
     with st.expander("Your selected options"):
-        user_input = {
-            "Gender": gender, "Age": age, "Hypertension": hypertension, "Heart Disease": heart_disease,
-            "Ever Married": ever_married, "Work Type": work_type, "Residence Type": residence_type,
-            "Avg Glucose Level": avg_glucose_level, "BMI": bmi, "Smoking Status": smoking_status
-        }
-        st.write(user_input)
+        input_data = {"Gender": gender, "Age": age, "Hypertension": hypertension, "Heart Disease": heart_disease,
+                      "Ever Married": ever_married, "Work Type": work_type, "Residence Type": residence_type,
+                      "Avg Glucose Level": avg_glucose_level, "BMI": bmi, "Smoking Status": smoking_status}
+        st.write(input_data)
 
-        # Convert user inputs to numerical values
         result = []
-        for i in user_input.values():
-            if isinstance(i, (int, float)):  # For numeric fields
+        for i in input_data.values():
+            if isinstance(i, (int, float)):
                 result.append(i)
-            else:  # For categorical fields
-                result.append(a(i, encoded_values))
+            else:
+                result.append(encode(i, encoded_values))
 
-    # Predict and show results
     with st.expander("Prediction Results"):
-        input_data = np.array(result).reshape(1, -1)
+        input_array = np.array(result).reshape(1, -1)
 
-        # Load the trained model
-        m = joblib.load("stroke_model")
+        # Load the pre-trained model
+        model = joblib.load("stroke_model")
 
-        # Get prediction and probability
-        prediction = m.predict(input_data)
-        prob = m.predict_proba(input_data)
+        # Make predictions
+        prediction = model.predict(input_array)
+        prob = model.predict_proba(input_array)
 
-        # Show prediction result
         if prediction == 1:
-            st.warning("Positive Risk!!! You have Stroke, Be Careful")
+            st.warning("Positive Risk! You may have a stroke. Be careful.")
             prob_score = {"Positive Risk": prob[0][1], "Negative Risk": prob[0][0]}
             st.write(prob_score)
         else:
-            st.success("Negative Risk!!! You don't have Stroke, Enjoy!!")
+            st.success("Negative Risk! You don't have a stroke.")
             prob_score = {"Negative Risk": prob[0][0], "Positive Risk": prob[0][1]}
             st.write(prob_score)
+
+# Run the Streamlit app
+if __name__ == "__main__":
+    stroke_pred()
