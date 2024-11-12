@@ -65,7 +65,7 @@ There are a total of 5 diseases that can be predicted with the help of this appl
 		diabetes_pred()
 	elif choice == "Stroke Prediction":
 		stroke_pred()
-	else: choice == "Chronic Kidney Disease Prediction":
+	elif choice == "Chronic Kidney Disease Prediction":
 		kidney_pred()
 		
 
