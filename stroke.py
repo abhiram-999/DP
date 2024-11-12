@@ -1,7 +1,8 @@
+# Import necessary libraries
 import streamlit as st
-import joblib
 import numpy as np
 from PIL import Image
+from xgboost import XGBClassifier
 
 # Predefined attribute information and encoding dictionary
 attribute = """
@@ -21,55 +22,58 @@ attribute = """
 """
 
 encoded_values = {
-    "Female": 0, "Male": 1, "Yes": 1, "No": 0, "Urban": 1, "Rural": 0, 
-    "Private": 1, "Self-employed": 2, "Govt job": 0, "Children": 3, "Never worked": 4, 
-    "Formerly smoked": 1, "Never smoked": 2, "Smokes": 3, "Unknown": 0
+    "Female": 0, "Male": 1, "Yes": 1, "No": 0, "Urban": 1, "Rural": 0, 'Private': 1,
+    'Self-employed': 3, 'Govt job': 0, 'Children': 4, 'Never worked': 1, 'Formerly smoked': 1,
+    'Never smoked': 2, 'Smokes': 3, 'Unknown': 0
 }
 
 # Function for encoding
 def encode(val, encoding_dict):
     return encoding_dict.get(val, val)
 
+# Stroke prediction function
 def stroke_pred():
     st.write("# Stroke Predictor")
     img = Image.open("stroke.jpeg")
-    st.image(img)
+    st.image(img) 
     st.write(attribute)
 
-    st.header("Provide Your Input")
+    st.header("Give Your Input")
     col1, col2 = st.columns(2)
 
     with col1:
-        gender = st.radio("What is your Gender?", ["Male", "Female"])
+        gender = st.radio("What is your Gender", ["Male", "Female"])
         hypertension = st.radio("Do you have Hypertension?", ["Yes", "No"])
-        ever_married = st.radio("Have you ever been married?", ["Yes", "No"])
-        residence_type = st.selectbox("Select your Residence Type", ["Rural", "Urban"])
+        ever_married = st.radio("Have you ever married before?", ["Yes", "No"])
+        residence_type = st.selectbox("Select your Residence Type", ['Rural', 'Urban'])
         bmi = st.number_input("Enter your BMI Value", 10.0, 100.0, 28.0, step=0.1)
 
     with col2:
         age = st.number_input("Enter your Age", 10, 90, 44)
         heart_disease = st.radio("Do you have Heart Disease?", ["Yes", "No"])
-        work_type = st.selectbox("What is your Work type?", ["Private", "Self-employed", "Govt job", "Children", "Never worked"])
+        work_type = st.selectbox("What is your Work type?", ['Private', 'Self-employed', 'Govt job', 'Children', 'Never worked'])
         avg_glucose_level = st.number_input("Enter your Avg glucose level", 55.0, 300.0, 106.0, step=0.1)
-        smoking_status = st.selectbox("Select your Smoking Status", ["Formerly smoked", "Never smoked", "Smokes", "Unknown"])
+        smoking_status = st.selectbox("Select your Smoking Status", ['Formerly smoked', 'Never smoked', 'Smokes', 'Unknown'])
 
-    # Display selected options
     with st.expander("Your selected options"):
-        input_data = {
-            "Gender": gender, "Age": age, "Hypertension": hypertension, "Heart Disease": heart_disease,
-            "Ever Married": ever_married, "Work Type": work_type, "Residence Type": residence_type,
-            "Avg Glucose Level": avg_glucose_level, "BMI": bmi, "Smoking Status": smoking_status
-        }
+        input_data = {"Gender": gender, "Age": age, "Hypertension": hypertension, "Heart Disease": heart_disease,
+                      "Ever Married": ever_married, "Work Type": work_type, "Residence Type": residence_type,
+                      "Avg Glucose Level": avg_glucose_level, "BMI": bmi, "Smoking Status": smoking_status}
         st.write(input_data)
 
-    # Encode inputs for the model
-    result = [encode(val, encoded_values) if isinstance(val, str) else val for val in input_data.values()]
-    
+        result = []
+        for i in input_data.values():
+            if isinstance(i, (int, float)):
+                result.append(i)
+            else:
+                result.append(encode(i, encoded_values))
+
     with st.expander("Prediction Results"):
         input_array = np.array(result).reshape(1, -1)
 
-        # Load the pre-trained model
-        model = joblib.load("stroke_model.joblib")
+        # Load the pre-trained model in JSON format
+        model = XGBClassifier()
+        model.load_model("stroke_model.json")
 
         # Make predictions
         prediction = model.predict(input_array)
