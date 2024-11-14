@@ -8,6 +8,14 @@ from PIL import Image
 class EuclideanDistance64:
     pass
 
+def load_model():
+    try:
+        with open("heart_model.pkl", "rb") as f:
+            return cloudpickle.load(f)
+    except Exception as e:
+        st.error(f"Error loading model: {e}")
+        return None
+
 # Attribute information and encoding dictionary
 attribute = """
 ## Attribute Information
