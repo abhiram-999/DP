@@ -145,13 +145,13 @@ This heart disease predictor app can be a valuable tool for both patients and he
 		#st.write(prob)
 
 		if prediction == 1:
-			st.warning("Positive Risk!!, You have Heart Disease, Be Careful")
+			st.warning("Positive Risk!!, You have Heart Disease")
 			prob_score = {"Positive Risk": prob[0][1], 
 			"Negative Risk": prob[0][0]}
 			st.write(prob_score)
 
 		else:
-			st.success("Negative Risk!!! You don't have Heart Disease, Enjoy!!")
+			st.success("Negative Risk!!! You don't have Heart Disease")
 			prob_score = {"Negative Risk": prob[0][0],
 			"Positive Risk": prob[0][1]}
 			st.write(prob_score)
