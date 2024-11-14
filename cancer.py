@@ -111,13 +111,13 @@ By using this app, patients can take proactive measures to prevent cancer or det
         #st.write(prob)
 
         if prediction == 1:
-            st.warning("Positive Risk!!! Be Careful")
+            st.warning("Positive Risk!!!")
             prob_score = {"Positive Risk": prob[0][1],
             "Negative Risk": prob[0][0]}
             st.write(prob_score)
 
         else:
-            st.success("Negative Risk!!! Enjoy!!")
+            st.success("Negative Risk!!!")
             prob_score = {"Negative Risk": prob[0][0],
             "Positive Risk": prob[0][1]}
             st.write(prob_score)
