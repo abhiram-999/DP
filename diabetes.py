@@ -51,7 +51,7 @@ By providing users with personalized risk assessments, the Diabetes Predictor Ap
 	col1, col2 = st.columns(2)
 
 	with col1:
-		pregnancies = st.number_input("Enter the number of Pregnancies you had", 0, 50, 2)
+		
 		blood_pressure = st.number_input("Enter your Blood Pressure", 0, 360, 80)
 		insulin = st.number_input("Enter your Insulin Level", 0, 1000, 100)
 		diabetes_pedigree_function = st.number_input("Enter your Diabetes Pedigree Function Value", 0.0, 5.0, 0.05, step = 0.001)
@@ -65,7 +65,7 @@ By providing users with personalized risk assessments, the Diabetes Predictor Ap
 
 
 	with st.expander("Your selected options"):
-		so = {"Pregnancies":pregnancies, "Glucose":glucose, "BloodPressure":blood_pressure, "SkinThickness":skin_thickness,
+		so = {"Glucose":glucose, "BloodPressure":blood_pressure, "SkinThickness":skin_thickness,
 		"Insulin":insulin, "BMI":bmi, "DiabetesPedigreeFunction":diabetes_pedigree_function, "Age":age}
 
 		st.write(so)
