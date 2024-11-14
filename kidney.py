@@ -191,13 +191,13 @@ The app is easy to use and provides patients with an intuitive interface that di
 		#st.write(prob)
 
 		if prediction == 0:
-			st.warning("Positive Risk!!! You have CKD, Be Careful")
+			st.warning("Positive Risk!!! You have CKD")
 			prob_score = {"Positive Risk": prob[0][0],
 			"Negative Risk": prob[0][1]}
 			st.write(prob_score)
 
 		else:
-			st.success("Negative Risk!!! You don't have CKD Enjoy!!")
+			st.success("Negative Risk!!! You don't have CKD")
 			prob_score = {"Negative Risk": prob[0][1],
 			"Positive Risk": prob[0][0]}
 			st.write(prob_score)
