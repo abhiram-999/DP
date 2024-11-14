@@ -1,3 +1,4 @@
+
 # importing the packages
 import streamlit as st
 from PIL import Image
@@ -23,36 +24,20 @@ def main():
 		#img = Image.open("cover.jpg")
 		#st.image(img)
 
+		# Introduction text
 		st.write("""
+        ### Welcome to HealthGuard!
+        HealthGuard uses advanced machine learning algorithms to predict the likelihood of a patient developing multiple diseases. It’s designed to support early intervention based on their medical history, lifestyle, genetic factors, and other relevant data and appropriate medical care to improve patient outcomes.
+        
+        ### Diseases Predicted
+        - *Diabetes*
+        - *Heart Disease*
+        - *Chronic Kidney Disease*
+        - *Stroke*
+        - *Cancer*
 
-
-HealthGaurd is an advanced healthcare technology that uses machine learning algorithms to predict the likelihood of a patient developing multiple diseases based on their medical history, lifestyle, genetic factors, and other relevant data. The system is designed to help doctors and medical professionals identify patients who are at a higher risk of developing multiple diseases and provide them with early intervention and appropriate medical care to prevent or manage the onset of these diseases. This system can have a significant impact on the healthcare industry by improving patient outcomes, reducing healthcare costs, and enhancing overall population health.
-
-
-There are a total of 5 diseases that can be predicted with the help of this application.
-
-### App Content
-
-	- This app has 6 sections
-
-	1) Home Page - The page you are currently in
-
-	2) Diabetes Prediction - This page will help you to predict whether you have 
-	Diabetes or not
-
-	3) Heart Disease Prediction - This page will help you to predict whether you have 
-	Heart disease or not
-
-	4) Chronic Kidney Disease Prediction - This page will help you to predict whether 
-	you have Chronic Kidney Disease or not
-
-	5) Liver Disease Prediction - This page will help you to predict whether you have 
-	Liver Disease or not
-
-	6) Cancer Prediction - This page will help you to predict whether you have Cancer 
-	or not
-
-			""")
+        Navigate through the sections to predict your health risk for each disease.
+        """)
 
 
 	elif choice=="Heart Disease Prediction":
