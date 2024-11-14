@@ -91,13 +91,13 @@ By providing users with personalized risk assessments, the Diabetes Predictor Ap
 		#st.write(prob)
 
 		if prediction == 1:
-			st.warning("Positive Risk!!!, You have Diabetes, Be Careful")
+			st.warning("Positive Risk!!!, You have Diabetes")
 			prob_score = {"Positive Risk": prob[0][1],
 			"Negative Risk": prob[0][0]}
 			st.write(prob_score)
 
 		else:
-			st.success("Negative Risk!!!, You don't have Diabetes, Enjoy!!")
+			st.success("Negative Risk!!!, You don't have Diabetes")
 			prob_score = {"Negative Risk": prob[0][0],
 			"Positive Risk": prob[0][1]}
 			st.write(prob_score)
