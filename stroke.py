@@ -80,11 +80,11 @@ def stroke_pred():
         prob = model.predict_proba(input_array)
 
         if prediction == 1:
-            st.warning("Positive Risk! You may have a stroke. Be careful.")
+            st.warning("Positive Risk! You may have a stroke")
             prob_score = {"Positive Risk": prob[0][1], "Negative Risk": prob[0][0]}
             st.write(prob_score)
         else:
-            st.success("Negative Risk! You don't have a stroke.")
+            st.success("Negative Risk! You don't have a stroke")
             prob_score = {"Negative Risk": prob[0][0], "Positive Risk": prob[0][1]}
             st.write(prob_score)
 
