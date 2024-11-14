@@ -2,6 +2,7 @@
 import streamlit as st
 import joblib
 import pickle
+import cloudpickle
 import numpy as np
 from PIL import Image  # Import Image here
 
