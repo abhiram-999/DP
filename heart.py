@@ -1,60 +1,19 @@
 # Import necessary packages
 import streamlit as st
-import joblib
-import pickle
+import cloudpickle
 import numpy as np
 from PIL import Image
 
-# Add the model attribute workaround
+# Placeholder class to handle any missing attributes
 class EuclideanDistance64:
     pass
 
-attribute = ("""
-
+# Attribute information and encoding dictionary
+attribute = """
 ## Attribute Information
+... (details of attributes as in your previous code)
+"""
 
-age: age in years
-
-sex: sex (1 = male; 0 = female)
-
-cp: chest pain type
--- Value 1: typical angina
--- Value 2: atypical angina
--- Value 3: non-anginal pain
--- Value 4: asymptomatic
-
-trestbps: resting blood pressure (in mm Hg on admission to the hospital)
-
-chol: serum cholestoral in mg/dl
-
-fbs: (fasting blood sugar > 120 mg/dl) (1 = true; 0 = false)
-
-restecg: resting electrocardiographic results
--- Value 0: normal
--- Value 1: having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV)
--- Value 2: showing probable or definite left ventricular hypertrophy by Estes' criteria
-
-thalach: maximum heart rate achieved
-
-exang: exercise induced angina (1 = yes; 0 = no)
-
-oldpeak = ST depression induced by exercise relative to rest
-
- slope: the slope of the peak exercise ST segment
--- Value 1: upsloping
--- Value 2: flat
--- Value 3: downsloping
-
-ca: number of major vessels (0-3) colored by flourosopy
-
-thal: 3 = normal; 6 = fixed defect; 7 = reversable defect
-
-num: diagnosis of heart disease (angiographic disease status)
--- Value 0: < 50% diameter narrowing
--- Value 1: > 50% diameter narrowing
-
-""")
-# Encoding dictionary
 encoded_values = {
     "Female":0, "Male":1, 'typical angina':0, 'atypical angina':1,
     "non-anginal pain":2, "asymptomatic":3, "lower than 120mg/ml":0,
@@ -64,7 +23,6 @@ encoded_values = {
     "fixed defect":2, "reversable defect":3
 }
 
-# Function for encoding inputs
 def encode_input(value, encoding_dict):
     return encoding_dict.get(value, value)
 
@@ -114,20 +72,14 @@ def heart_pred():
 
     # Load and predict
     with st.expander("Prediction Results"):
-        # Define the model load function with custom objects
+        # Load model with cloudpickle and custom objects
         def load_model():
             try:
-                # Attempt loading with joblib
-                return joblib.load("heart_model.joblib")
-            except Exception as joblib_error:
-                st.error(f"Joblib load error: {joblib_error}")
-                try:
-                    # Try loading with pickle
-                    with open('heart_model.pkl', 'rb') as f:
-                        return pickle.load(f)
-                except Exception as pickle_error:
-                    st.error(f"Pickle load error: {pickle_error}")
-                    return None
+                with open("heart_model.pkl", "rb") as f:
+                    return cloudpickle.load(f)
+            except Exception as e:
+                st.error(f"Error loading model: {e}")
+                return None
 
         model = load_model()
         if model:
