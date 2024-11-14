@@ -1,9 +1,14 @@
+# Import necessary packages
 import streamlit as st
-import cloudpickle
+import joblib
+import pickle
 import numpy as np
 from PIL import Image
 
-# Attribute Information
+# Add the model attribute workaround
+class EuclideanDistance64:
+    pass
+
 attribute = ("""
 
 ## Attribute Information
@@ -49,74 +54,93 @@ num: diagnosis of heart disease (angiographic disease status)
 -- Value 1: > 50% diameter narrowing
 
 """)
-
 # Encoding dictionary
 encoded_values = {
-    "Female": 0, "Male": 1, 'typical angina': 0, 'atypical angina': 1,
-    "non-anginal pain": 2, "asymptomatic": 3, "lower than 120mg/ml": 0,
-    "greater than 120mg/ml": 1, 'normal': 0, 'ST-T wave abnormality': 1, 
-    'left ventricular hypertrophy': 2, "no": 0, "yes": 1, 
-    "upsloping": 0, "flat": 1, "downsloping": 2, "normal": 1, 
-    "fixed defect": 2, "reversable defect": 3
+    "Female":0, "Male":1, 'typical angina':0, 'atypical angina':1,
+    "non-anginal pain":2, "asymptomatic":3, "lower than 120mg/ml":0,
+    "greater than 120mg/ml":1, 'normal':0, 'ST-T wave abnormality':1,
+    'left ventricular hypertrophy':2, "no":0, "yes":1,
+    "upsloping":0, "flat":1, "downsloping":2, "normal":1, 
+    "fixed defect":2, "reversable defect":3
 }
 
-# Encoding function
-def encode_value(val, my_dict):
-    return my_dict.get(val, val)
+# Function for encoding inputs
+def encode_input(value, encoding_dict):
+    return encoding_dict.get(value, value)
 
 def heart_pred():
     st.write("# Heart Disease Predictor")
     img = Image.open("heart.jpeg")
     st.image(img)
-
+    
+    # Attribute description
     st.markdown(attribute)
-    st.header("Give Your Input")
+    st.header("Provide Your Input")
 
-    # Collect inputs
-    age = st.number_input("Enter your Age", 29, 80, 54)
-    sex = st.radio("What is your Gender", ["Male", "Female"])
-    chest_pain_type = st.selectbox("Your Chest pain type", ['typical angina', 'atypical angina', "non-anginal pain", "asymptomatic"])
-    resting_blood_pressure = st.number_input("Resting Blood Pressure value", 90, 200, 131)
-    cholestrol = st.number_input("Cholesterol Value", 120, 575, 245)
-    fasting_blood_sugar = st.radio("Your Fasting blood sugar value is", ["lower than 120mg/ml", 'greater than 120mg/ml'])
-    rest_ecg = st.selectbox("Your Rest ECG type", ['normal', 'ST-T wave abnormality', 'left ventricular hypertrophy'])
-    max_heart_rate_achieved = st.number_input("Your maximum heart rate achieved value", 70, 210, 109)
-    exercise_induced_angina = st.radio("Exercise Induced Angina", ["yes", "no"])
-    st_depression = st.number_input("Your ST depression value", 0.0, 7.0, 1.0, step=0.1)
-    st_slope = st.selectbox("Your ST Slope type", ['upsloping', 'flat', 'downsloping'])
-    num_major_vessels = st.number_input("How many major vessels do you have?", 0, 3, 1)
-    thalassemia = st.selectbox("Your Thalassemia type", ["normal", "fixed defect", "reversable defect"])
+    col1, col2 = st.columns(2)
+    # Collect user inputs
+    with col1:
+        age = st.number_input("Age", 29, 80, 54)
+        chest_pain_type = st.selectbox("Chest pain type", 
+                                       ['typical angina', 'atypical angina', "non-anginal pain", "asymptomatic"])
+        cholestrol = st.number_input("Cholesterol", 120, 575, 245)
+        rest_ecg = st.selectbox("Rest ECG type", 
+                                ['normal', 'ST-T wave abnormality', 'left ventricular hypertrophy'])
+        exercise_induced_angina = st.radio("Exercise Induced Angina", ["yes", "no"])
+        st_slope = st.selectbox("ST Slope type", ['upsloping', 'flat', 'downsloping'])
 
-    # Encode and prepare input data
-    inputs = [
-        age, encode_value(sex, encoded_values), encode_value(chest_pain_type, encoded_values),
-        resting_blood_pressure, cholestrol, encode_value(fasting_blood_sugar, encoded_values),
-        encode_value(rest_ecg, encoded_values), max_heart_rate_achieved,
-        encode_value(exercise_induced_angina, encoded_values), st_depression,
-        encode_value(st_slope, encoded_values), num_major_vessels, encode_value(thalassemia, encoded_values)
-    ]
-    input_data = np.array(inputs).reshape(1, -1)
+    with col2:
+        sex = st.radio("Gender", ["Male", "Female"])
+        resting_blood_pressure = st.number_input("Resting Blood Pressure", 90, 200, 131)
+        fasting_blood_sugar = st.radio("Fasting Blood Sugar", ["lower than 120mg/ml", 'greater than 120mg/ml'])
+        max_heart_rate_achieved = st.number_input("Max Heart Rate Achieved", 70, 210, 109)
+        st_depression = st.number_input("ST Depression", 0.0, 7.0, 1.0, step=0.1)
+        num_major_vessels = st.number_input("Number of Major Vessels", 0, 3, 1)
+        thalassemia = st.selectbox("Thalassemia type", ["normal", "fixed defect", "reversable defect"])
 
-    # Load the model using cloudpickle
-    try:
-        with open('heart_model.pkl', 'rb') as f:
-            model = cloudpickle.load(f)
-        st.write("Model loaded successfully.")
-    except Exception as e:
-        st.error(f"Error loading model: {e}")
-        return
+    # Display user choices
+    with st.expander("Selected Options"):
+        input_data = [
+            age, encode_input(sex, encoded_values),
+            encode_input(chest_pain_type, encoded_values),
+            resting_blood_pressure, cholestrol, 
+            encode_input(fasting_blood_sugar, encoded_values), 
+            encode_input(rest_ecg, encoded_values), max_heart_rate_achieved, 
+            encode_input(exercise_induced_angina, encoded_values), st_depression, 
+            encode_input(st_slope, encoded_values), num_major_vessels, 
+            encode_input(thalassemia, encoded_values)
+        ]
+        st.write(input_data)
 
-    # Make predictions
-    prediction = model.predict(input_data)
-    prob = model.predict_proba(input_data)
+    # Load and predict
+    with st.expander("Prediction Results"):
+        # Define the model load function with custom objects
+        def load_model():
+            try:
+                # Attempt loading with joblib
+                return joblib.load("heart_model.joblib")
+            except Exception as joblib_error:
+                st.error(f"Joblib load error: {joblib_error}")
+                try:
+                    # Try loading with pickle
+                    with open('heart_model.pkl', 'rb') as f:
+                        return pickle.load(f)
+                except Exception as pickle_error:
+                    st.error(f"Pickle load error: {pickle_error}")
+                    return None
 
-    if prediction == 1:
-        st.warning("Positive Risk!! You have Heart Disease, Be Careful")
-        st.write({"Positive Risk": prob[0][1], "Negative Risk": prob[0][0]})
-    else:
-        st.success("Negative Risk! You don't have Heart Disease.")
-        st.write({"Negative Risk": prob[0][0], "Positive Risk": prob[0][1]})
+        model = load_model()
+        if model:
+            input_array = np.array(input_data).reshape(1, -1)
+            prediction = model.predict(input_array)
+            prob = model.predict_proba(input_array)
 
-# Run the prediction function
+            if prediction[0] == 1:
+                st.warning("Positive Risk: You may have Heart Disease.")
+                st.write({"Positive Risk": prob[0][1], "Negative Risk": prob[0][0]})
+            else:
+                st.success("Negative Risk: You seem free of Heart Disease.")
+                st.write({"Negative Risk": prob[0][0], "Positive Risk": prob[0][1]})
+
 if __name__ == "__main__":
     heart_pred()
