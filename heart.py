@@ -1,6 +1,9 @@
 # Import necessary packages
-import cloudpickle
 import streamlit as st
+import joblib
+import pickle
+import numpy as np
+from PIL import Image  # Import Image here
 
 # Placeholder class to resolve missing attribute
 class EuclideanDistance64:
