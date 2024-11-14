@@ -58,7 +58,7 @@ By providing users with personalized risk assessments, the Diabetes Predictor Ap
 		
 
 	with col2:
-		glucose = st.number_input("Enter your Glucose Level", 0, 210, 130)
+		glucose = st.number_input("Enter your Glucose Level", 0, 600, 130)
 		skin_thickness = st.number_input("Enter the Thickness of your skin", 0, 200, 20)
 		bmi = st.number_input("Enter your BMI value", 15.0, 100.0, 25.0, step = 0.1)
 		age = st.number_input("Enter your Age", 12, 100, 20)
@@ -97,7 +97,7 @@ By providing users with personalized risk assessments, the Diabetes Predictor Ap
 			st.write(prob_score)
 
 		else:
-			st.success("Negative Risk!!!, You don't have Diabetes, Enjoy!!")
+			st.success("Negative Risk!!!, You don't have Diabetes.")
 			prob_score = {"Negative Risk": prob[0][0],
 			"Positive Risk": prob[0][1]}
 			st.write(prob_score)
