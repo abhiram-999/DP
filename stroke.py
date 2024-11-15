@@ -18,7 +18,6 @@ attribute = """
 9) avg_glucose_level: average glucose level in blood
 10) bmi: body mass index
 11) smoking_status: "formerly smoked", "never smoked", "smokes" or "Unknown"
-12) stroke: 1 if the patient had a stroke or 0 if not
 """
 
 encoded_values = {
